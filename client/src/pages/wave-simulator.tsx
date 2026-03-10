@@ -1,32 +1,20 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
-const SPEEDS = [
-  { label: "慢速", value: 2, color: "hsl(210, 92%, 45%)" },
-  { label: "中速", value: 5, color: "hsl(170, 75%, 35%)" },
-  { label: "快速", value: 10, color: "hsl(30, 80%, 40%)" },
-];
-
+const WAVE_SPEED = 2;
+const WAVE_COLOR = "hsl(210, 92%, 45%)";
 const SOURCE_X_RATIO = 0.08;
 const NUM_POINTS = 800;
 
 export default function WaveSimulator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [speedIndex, setSpeedIndex] = useState(1);
   const isDragging = useRef(false);
   const sourceY = useRef(0);
   const waveData = useRef<number[]>(new Array(NUM_POINTS).fill(0));
   const animFrameRef = useRef<number>(0);
   const lastTimeRef = useRef<number>(0);
   const canvasSizeRef = useRef({ w: 0, h: 0 });
-  const speedRef = useRef(SPEEDS[1].value);
-  const speedIndexRef = useRef(1);
   const accumulatorRef = useRef(0);
-
-  useEffect(() => {
-    speedRef.current = SPEEDS[speedIndex].value;
-    speedIndexRef.current = speedIndex;
-  }, [speedIndex]);
 
   const getCanvasPos = useCallback(
     (clientX: number, clientY: number) => {
@@ -101,9 +89,8 @@ export default function WaveSimulator() {
       const dt = lastTimeRef.current ? (timestamp - lastTimeRef.current) / 1000 : 0.016;
       lastTimeRef.current = timestamp;
 
-      const speed = speedRef.current;
       const clampedDt = Math.min(dt, 0.05);
-      accumulatorRef.current += clampedDt * speed * 60;
+      accumulatorRef.current += clampedDt * WAVE_SPEED * 60;
       const steps = Math.min(Math.floor(accumulatorRef.current), 20);
       accumulatorRef.current -= steps;
 
@@ -155,11 +142,9 @@ export default function WaveSimulator() {
       ctx.stroke();
       ctx.setLineDash([]);
 
-      const currentColor = SPEEDS[speedIndexRef.current].color;
-
       const glowGradient = ctx.createLinearGradient(sourceXPx, 0, w, 0);
-      glowGradient.addColorStop(0, currentColor.replace(")", ", 0.3)").replace("hsl", "hsla"));
-      glowGradient.addColorStop(1, currentColor.replace(")", ", 0.0)").replace("hsl", "hsla"));
+      glowGradient.addColorStop(0, "hsla(210, 92%, 45%, 0.3)");
+      glowGradient.addColorStop(1, "hsla(210, 92%, 45%, 0.0)");
 
       ctx.strokeStyle = glowGradient;
       ctx.lineWidth = 8;
@@ -174,7 +159,7 @@ export default function WaveSimulator() {
       }
       ctx.stroke();
 
-      ctx.strokeStyle = currentColor;
+      ctx.strokeStyle = WAVE_COLOR;
       ctx.lineWidth = 3;
       ctx.beginPath();
       for (let i = 0; i < NUM_POINTS; i++) {
@@ -233,7 +218,7 @@ export default function WaveSimulator() {
 
       ctx.beginPath();
       ctx.arc(midX, midY, 4, 0, Math.PI * 2);
-      ctx.fillStyle = currentColor;
+      ctx.fillStyle = WAVE_COLOR;
       ctx.fill();
 
       ctx.fillStyle = "rgba(255,255,255,0.5)";
@@ -244,11 +229,11 @@ export default function WaveSimulator() {
       const srcDisplayY = centerY + data[0];
 
       ctx.save();
-      ctx.shadowColor = currentColor;
+      ctx.shadowColor = WAVE_COLOR;
       ctx.shadowBlur = isDragging.current ? 25 : 12;
       ctx.beginPath();
       ctx.arc(sourceXPx, srcDisplayY, isDragging.current ? 14 : 10, 0, Math.PI * 2);
-      ctx.fillStyle = currentColor;
+      ctx.fillStyle = WAVE_COLOR;
       ctx.fill();
       ctx.restore();
 
@@ -352,40 +337,6 @@ export default function WaveSimulator() {
           data-testid="canvas-wave"
         />
       </div>
-
-      <footer className="px-4 py-3 sm:px-6 sm:py-4 border-t border-white/10">
-        <div className="flex items-center justify-center gap-2 sm:gap-3">
-          <span className="text-xs sm:text-sm text-white/50 mr-1 sm:mr-2" data-testid="text-speed-label">
-            波速：
-          </span>
-          {SPEEDS.map((s, i) => (
-            <button
-              key={s.label}
-              onClick={() => setSpeedIndex(i)}
-              className={`
-                px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-sm sm:text-base font-medium
-                transition-all duration-200 
-                ${
-                  speedIndex === i
-                    ? "text-white shadow-lg scale-105"
-                    : "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
-                }
-              `}
-              style={
-                speedIndex === i
-                  ? {
-                      backgroundColor: s.color,
-                      boxShadow: `0 0 20px ${s.color}40`,
-                    }
-                  : undefined
-              }
-              data-testid={`button-speed-${s.label}`}
-            >
-              {s.label}
-            </button>
-          ))}
-        </div>
-      </footer>
     </div>
   );
 }
