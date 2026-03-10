@@ -196,6 +196,51 @@ export default function WaveSimulator() {
         ctx.fill();
       }
 
+      const midIndex = Math.floor(NUM_POINTS / 2);
+      const midX = sourceXPx + (midIndex / NUM_POINTS) * waveWidth;
+      const midY = centerY + data[midIndex];
+      const midDisplacement = Math.abs(data[midIndex]);
+
+      ctx.strokeStyle = "rgba(255,255,255,0.18)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(midX, centerY - 6);
+      ctx.lineTo(midX, midY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (midDisplacement > 1) {
+        const midArrowDir = data[midIndex] > 0 ? 1 : -1;
+        ctx.fillStyle = "rgba(255,255,255,0.3)";
+        ctx.beginPath();
+        ctx.moveTo(midX - 4, centerY - midArrowDir * 8);
+        ctx.lineTo(midX + 4, centerY - midArrowDir * 8);
+        ctx.lineTo(midX, centerY - midArrowDir * 14);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      ctx.save();
+      const glowIntensity = Math.min(midDisplacement / 40, 1);
+      ctx.shadowColor = "white";
+      ctx.shadowBlur = 16 + glowIntensity * 20;
+      ctx.beginPath();
+      ctx.arc(midX, midY, 7 + glowIntensity * 3, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${0.7 + glowIntensity * 0.3})`;
+      ctx.fill();
+      ctx.restore();
+
+      ctx.beginPath();
+      ctx.arc(midX, midY, 4, 0, Math.PI * 2);
+      ctx.fillStyle = currentColor;
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(255,255,255,0.5)";
+      ctx.font = "12px 'Open Sans', sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("介質質點", midX, midY < centerY ? midY + 26 : midY - 16);
+
       const srcDisplayY = centerY + data[0];
 
       ctx.save();
