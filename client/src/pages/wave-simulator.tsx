@@ -1,4 +1,5 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
+import { Pause, Play } from "lucide-react";
 
 const WAVE_SPEED = 2;
 const WAVE_COLOR = "hsl(210, 92%, 45%)";
@@ -8,6 +9,8 @@ const NUM_POINTS = 800;
 export default function WaveSimulator() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(false);
+  const pausedRef = useRef(false);
   const isDragging = useRef(false);
   const sourceY = useRef(0);
   const waveData = useRef<number[]>(new Array(NUM_POINTS).fill(0));
@@ -90,9 +93,12 @@ export default function WaveSimulator() {
       lastTimeRef.current = timestamp;
 
       const clampedDt = Math.min(dt, 0.05);
-      accumulatorRef.current += clampedDt * WAVE_SPEED * 60;
-      const steps = Math.min(Math.floor(accumulatorRef.current), 20);
-      accumulatorRef.current -= steps;
+      let steps = 0;
+      if (!pausedRef.current) {
+        accumulatorRef.current += clampedDt * WAVE_SPEED * 60;
+        steps = Math.min(Math.floor(accumulatorRef.current), 20);
+        accumulatorRef.current -= steps;
+      }
 
       const data = waveData.current;
 
@@ -292,6 +298,13 @@ export default function WaveSimulator() {
     };
   }, []);
 
+  const togglePause = useCallback(() => {
+    setPaused((prev) => {
+      pausedRef.current = !prev;
+      return !prev;
+    });
+  }, []);
+
   const resetWave = useCallback(() => {
     waveData.current = new Array(NUM_POINTS).fill(0);
     sourceY.current = 0;
@@ -314,13 +327,27 @@ export default function WaveSimulator() {
             Transverse Wave Propagation Simulator
           </p>
         </div>
-        <button
-          onClick={resetWave}
-          className="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-          data-testid="button-reset"
-        >
-          重置
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={togglePause}
+            className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg transition-all duration-200 ${
+              paused
+                ? "bg-blue-500/20 text-blue-400 hover:bg-blue-500/30"
+                : "bg-white/10 hover:bg-white/20"
+            }`}
+            data-testid="button-pause"
+          >
+            {paused ? <Play size={14} /> : <Pause size={14} />}
+            {paused ? "繼續" : "暫停"}
+          </button>
+          <button
+            onClick={resetWave}
+            className="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+            data-testid="button-reset"
+          >
+            重置
+          </button>
+        </div>
       </header>
 
       <div
