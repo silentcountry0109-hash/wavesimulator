@@ -280,11 +280,11 @@ export default function WaveSimulator() {
       for (let p = 0; p < LONG_PARTICLE_COUNT; p++) {
         const nominalX = sourceXPx + (p + 0.5) * particleSpacing;
         const dataIndex = Math.round((p / LONG_PARTICLE_COUNT) * NUM_POINTS);
-        const displacement = data[dataIndex] * maxDispScale / ((h / 4) * 0.38);
+        const displacement = -data[dataIndex] * maxDispScale / ((h / 4) * 0.38);
         const px = nominalX + displacement;
 
         const nextDataIndex = Math.round(((p + 1) / LONG_PARTICLE_COUNT) * NUM_POINTS);
-        const nextDisp = data[Math.min(nextDataIndex, NUM_POINTS - 1)] * maxDispScale / ((h / 4) * 0.38);
+        const nextDisp = -data[Math.min(nextDataIndex, NUM_POINTS - 1)] * maxDispScale / ((h / 4) * 0.38);
         const nextX = sourceXPx + (p + 1.5) * particleSpacing + nextDisp;
         const gap = nextX - px;
         const minGap = particleSpacing * 0.3;
@@ -310,7 +310,7 @@ export default function WaveSimulator() {
       const lMidP = Math.floor(LONG_PARTICLE_COUNT / 2);
       const lMidNomX = sourceXPx + (lMidP + 0.5) * particleSpacing;
       const lMidDataIdx = Math.round((lMidP / LONG_PARTICLE_COUNT) * NUM_POINTS);
-      const lMidDisp = data[lMidDataIdx] * maxDispScale / ((h / 4) * 0.38);
+      const lMidDisp = -data[lMidDataIdx] * maxDispScale / ((h / 4) * 0.38);
       const lMidX = lMidNomX + lMidDisp;
       const lMidDispAbs = Math.abs(lMidDisp);
 
@@ -343,7 +343,7 @@ export default function WaveSimulator() {
       ctx.fillText("介質質點", lMidX, lCenterY + 26);
 
       // source block for longitudinal (left edge)
-      const lSrcDisp = data[0] * maxDispScale / ((h / 4) * 0.38);
+      const lSrcDisp = -data[0] * maxDispScale / ((h / 4) * 0.38);
       ctx.save();
       ctx.shadowColor = LONGITUDINAL_COLOR; ctx.shadowBlur = 10;
       ctx.beginPath();
