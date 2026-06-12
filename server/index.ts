@@ -94,7 +94,8 @@ app.use((req, res, next) => {
     {
       port,
       host: "0.0.0.0",
-      reusePort: true,
+      // SO_REUSEPORT is unsupported on macOS and throws ENOTSUP
+      ...(process.platform === "linux" ? { reusePort: true } : {}),
     },
     () => {
       log(`serving on port ${port}`);
