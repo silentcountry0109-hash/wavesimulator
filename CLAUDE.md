@@ -73,6 +73,7 @@ Replit autoscale 是**無狀態、閒置會縮到零**的部署:
 
 ## 已知事項 / 修改紀錄
 
+- **2026-06-13**:套用尤瑞卡科學(Eureka Science)品牌辨識(輕量版)。深黑底發光波形保留不動,只品牌化頁首:水波紋反白標誌(`client/public/eureka/`)、明體標題(Noto Serif TC)、「尤瑞卡科學 EUREKA SCIENCE」lockup、抹茶綠頂帶、favicon 換成水波紋。品牌色票/字體 tokens 放在 `client/src/index.css` 開頭 `:root`(`--eureka-*`,單一真實來源,改色改字只動這裡)。品牌資產來源為 eureka-brand skill。
 - **2026-06-12**:新增三支參數滑桿(波速 0.5–4×/頻率 0.1–2 Hz/振幅 0–120,振幅 0 = 純手動拖曳模式)與「比較」模式(波 B 複製波 A 當下參數後可獨立調整,canvas 上 A 下 B;比較模式中縱波暫不顯示)。頻率用相位累加器實作,調整參數不跳相。`index.html` 的 `<title>` 同步改為「波動傳播模擬器」。
 - **2026-06-12**:`server/index.ts` 的 `reusePort: true` 改為 Linux-only(macOS 會 ENOTSUP 啟動失敗)。
 - 測試環境提醒:用自動化瀏覽器(headless / 隱藏分頁)驗證時,Chrome 會暫停 `requestAnimationFrame`,模擬器會看起來「完全不動」——這不是 bug,開可見分頁就正常。

@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 尤瑞卡科學 Eureka Science — 品牌 tokens(單一真實來源,改色改字只動這裡)
+   完整規範見 eureka-brand skill。此處僅取網頁所需子集。 */
+:root {
+  --eureka-paper:      #F4F1E7;
+  --eureka-soft:       #D4DAB4;
+  --eureka-matcha:     #A6B26C; /* 主色 */
+  --eureka-matcha-mid: #8E9B58;
+  --eureka-deep:       #6E7A43;
+  --eureka-stone:      #8C8A7E;
+  --eureka-sumi:       #2B2A24;
+  --eureka-cjk:   "Noto Serif TC", "Songti TC", serif;        /* 中文明體 */
+  --eureka-latin: "Cormorant Garamond", "Times New Roman", serif;
+}
+
 /* LIGHT MODE */
 :root {
   --button-outline: rgba(0,0,0, .10);

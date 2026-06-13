@@ -555,14 +555,50 @@ export default function WaveSimulator() {
 
   return (
     <div className="flex flex-col h-screen bg-[hsl(220,13%,7%)] text-white select-none overflow-hidden">
-      <header className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10">
-        <div>
-          <h1 className="text-lg sm:text-xl font-semibold tracking-tight" data-testid="text-title">
-            波動傳播模擬器
-          </h1>
-          <p className="text-xs sm:text-sm text-white/45 mt-0.5" data-testid="text-subtitle">
-            Wave Propagation Simulator
-          </p>
+      <header
+        className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 border-b border-white/10"
+        style={{ borderTop: "2px solid var(--eureka-matcha)" }}
+      >
+        <div className="flex items-center gap-3">
+          {/* 尤瑞卡科學品牌:水波紋標誌(深色底用反白版)— 同心圓擴散呼應波動主題 */}
+          <img
+            src="/eureka/mark-reversed.svg"
+            alt="尤瑞卡科學 Eureka Science"
+            className="w-9 h-9 sm:w-10 sm:h-10 shrink-0"
+            data-testid="img-brand-mark"
+          />
+          <div className="flex flex-col">
+            <h1
+              className="text-lg sm:text-xl tracking-tight leading-tight"
+              style={{ fontFamily: "var(--eureka-cjk)", fontWeight: 500 }}
+              data-testid="text-title"
+            >
+              波動傳播模擬器
+            </h1>
+            <p className="flex items-center gap-2 mt-0.5 leading-none" data-testid="text-subtitle">
+              <span
+                className="text-xs sm:text-sm"
+                style={{
+                  fontFamily: "var(--eureka-cjk)",
+                  fontWeight: 300,
+                  letterSpacing: "0.18em",
+                  color: "var(--eureka-soft)",
+                }}
+              >
+                尤瑞卡科學
+              </span>
+              <span
+                className="text-[10px] sm:text-xs"
+                style={{
+                  fontFamily: "var(--eureka-latin)",
+                  letterSpacing: "0.28em",
+                  color: "var(--eureka-matcha)",
+                }}
+              >
+                EUREKA SCIENCE
+              </span>
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <button
